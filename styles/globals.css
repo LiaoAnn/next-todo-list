@@ -26,12 +26,6 @@ a {
 	}
 }
 
-html,
-body {
-	margin: 0;
-	padding: 0;
-}
-
 button {
 	margin: 0;
 	padding: 0;
@@ -137,56 +131,25 @@ body {
 	border-top: 1px solid #e6e6e6;
 }
 
-.toggle-all {
-	width: 1px;
-	height: 1px;
-	border: none;
-	/* Mobile Safari */
-	opacity: 0;
-	position: absolute;
-	right: 100%;
-	bottom: 100%;
-}
-
-.toggle-all+label {
-	width: 60px;
-	height: 34px;
-	font-size: 0;
-	position: absolute;
-	top: -52px;
-	left: -13px;
-	-webkit-transform: rotate(90deg);
-	transform: rotate(90deg);
-}
-
-.toggle-all+label:before {
-	content: "❯";
-	font-size: 22px;
-	color: #e6e6e6;
-	padding: 10px 27px 10px 27px;
-}
-
-.toggle-all:checked+label:before {
-	color: #737373;
-}
-
 .todo-list {
 	margin: 0;
 	padding: 0;
-	list-style: none;
 	position: relative;
+	list-style: none;
 	overflow-y: auto;
 	z-index: -1;
 	height: 100%
 }
 
 .todo-list li {
-	padding: .5em;
+	height: 54px;
+	padding: 0 .5em;
 	position: absolute;
 	left: 0;
 	right: 0;
-	font-size: 24px;
+	font-size: initial;
 	border-bottom: 1px solid #dfdfdf;
+	transition: top .3s ease-in-out;
 }
 
 .todo-list li:last-child {
@@ -201,87 +164,120 @@ body {
 .todo-list li.editing .edit {
 	display: block;
 	width: calc(100% - 43px);
-	padding: 12px 16px;
-	margin: 0 0 0 43px;
+	padding: .5em;
+	margin: 0 0 0 2em;
+	background-color: #eee;
+	font-size: initial;
 }
 
-.todo-list li.editing .view {
-	display: none;
+.todo-list li .view {
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 }
 
 .todo-list li .toggle {
 	text-align: center;
-	width: 40px;
-	/* auto, since non-WebKit browsers doesn't support input styling */
 	height: auto;
 	position: absolute;
 	top: 0;
-	bottom: 0;
-	margin: auto 0;
+	left: 0;
 	border: none;
-	/* Mobile Safari */
 	-webkit-appearance: none;
 	appearance: none;
-}
-
-.todo-list li .toggle {
 	opacity: 0;
 }
 
-.todo-list li .toggle+label {
+.todo-list li span {
+	--transition-time: .2s;
+	position: relative;
+	padding-left: 2em;
+	transition: color var(--transition-time) ease-in-out;
+	word-break: break-all;
+	line-height: 1.2;
+	font-weight: 400;
+	color: #4d4d4d;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	line-clamp: 1;
+	-webkit-box-orient: vertical;
+}
+
+.todo-list li .toggle:checked+span {
+	color: #cdcdcd;
+}
+
+.todo-list li .toggle+span::before {
 	/*
 		Firefox requires `#` to be escaped - https://bugzilla.mozilla.org/show_bug.cgi?id=922433
 		IE and Edge requires *everything* to be escaped to render, so we do that instead of just the `#` - https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/7157459/
 	*/
-	background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23ededed%22%20stroke-width%3D%223%22/%3E%3C/svg%3E");
-	background-repeat: no-repeat;
-	background-position: center left;
-}
-
-.todo-list li .toggle:checked+label {
-	background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23bddad5%22%20stroke-width%3D%223%22/%3E%3Cpath%20fill%3D%22%235dc2af%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22/%3E%3C/svg%3E");
-}
-
-.todo-list li label {
-	word-break: break-all;
-	padding: 15px 15px 15px 60px;
-	display: block;
-	line-height: 1.2;
-	transition: color 0.4s;
-	font-weight: 400;
-	color: #4d4d4d;
-}
-
-.todo-list li.completed label {
-	color: #cdcdcd;
-	text-decoration: line-through;
-}
-
-.todo-list li .destroy {
-	display: none;
+	content: '';
 	position: absolute;
-	top: 0;
-	right: 10px;
-	bottom: 0;
-	width: 40px;
-	height: 40px;
-	margin: auto 0;
-	font-size: 30px;
-	color: #cc9a9a;
-	margin-bottom: 11px;
-	transition: color 0.2s ease-out;
+	top: 50%;
+	left: 0;
+	height: 1em;
+	width: 1em;
+	transform: translateY(-50%);
+	border-bottom: 2px solid #333;
+	border-right: 2px solid #333;
+	border-top: 2px solid #333;
+	border-left: 2px solid #333;
+	transition: all var(--transition-time) ease-in-out;
 }
 
-.todo-list li .destroy:hover {
-	color: #af5b5e;
+.todo-list li .toggle:checked+span::before {
+	border-bottom: 2px solid #cdcdcd;
+	border-right: 2px solid #cdcdcd;
+	border-top: 2px solid transparent;
+	border-left: 2px solid transparent;
+	width: 12px;
+	height: 22px;
+	top: calc(50% - 16px);
+	left: -8px;
+	transform: rotate(40deg);
+	transform-origin: 100% 100%;
+	backface-visibility: hidden;
 }
 
-.todo-list li .destroy:after {
-	content: "×";
+.todo-list .toggle+span::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 2em;
+	right: 100%;
+	transition: right var(--transition-time) ease-in-out;
+	height: 2px;
+	background-color: #cdcdcd;
 }
 
-.todo-list li:hover .destroy {
-	display: block;
+.todo-list .toggle:checked+span::after {
+	right: 0;
+}
+
+.todo-list li .actions {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	transition: display .2s ease-in-out;
+}
+
+.todo-list li:hover .actions {
+	display: flex;
+}
+
+@media (any-hover: none) {
+	.todo-list li .actions {
+		display: flex;
+	}
+}
+
+.todo-list li .actions > svg {
+	height: 1.5em;
+	width: 1.5em;
 }
 
 .todo-list li .edit {
@@ -397,10 +393,6 @@ html .clear-completed:active {
 	.todo-list li .toggle {
 		background: none;
 	}
-
-	.todo-list li .toggle {
-		height: 40px;
-	}
 }
 
 @media (max-width: 430px) {
@@ -432,8 +424,19 @@ html .clear-completed:active {
 		-32px -32px 64px #ffffff;
 }
 
-.todo-list li {
-	transition: top .5s;
+@media screen and (max-width: 1024px) {
+	.main {
+		min-width: 80%;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.main {
+		min-width: 100%;
+		height: 100%;
+		padding: 1em;
+		border-radius: 0;
+	}
 }
 
 .todo-list::-webkit-scrollbar {

@@ -9,6 +9,7 @@ export const TODO_ADD = "TODO_ADD";
 export const TODO_REMOVE = "TODO_REMOVE";
 export const TODO_EDIT = "TODO_EDIT";
 export const TODO_TOGGLE = "TODO_TOGGLE";
+import jsonTodos from "../todos.json";
 
 export type ToDos = {
     items: ToDoItem[];
@@ -69,47 +70,18 @@ const reducer = (state: ToDos, action: { type: action, payload: any }) => {
     }
 }
 
-const items: ToDoItem[] = [
-    {
-        id: v4(),
-        completed: true,
-        title: "1. Learn Qwik",
-        created_at: Date.now(),
-        completed_at: Date.now()
-    }, {
-        id: v4(),
-        completed: true,
-        title: "2. Learn Next.js",
-        created_at: Date.now()
-    }, {
-        id: v4(),
-        completed: true,
-        title: "3. Finish ToDo App with Qwik",
-        created_at: Date.now(),
-        completed_at: Date.now()
-    }, {
-        id: v4(),
-        completed: true,
-        title: "4. Finish ToDo App with Next.js",
-        created_at: Date.now()
-    }, {
-        id: v4(),
-        completed: false,
-        title: "5. Compare ToDo App with Qwik and Next.js",
-        created_at: Date.now()
-    }, {
-        id: v4(),
-        completed: false,
-        title: "6. Write a blog post about it",
-        created_at: Date.now(),
-        completed_at: Date.now()
-    }, {
-        id: v4(),
-        completed: false,
-        title: "7. Get A+ on the 資工導論🥲",
-        created_at: Date.now()
-    }
-];
+type jsonTodo = {
+    title: string,
+    completed: boolean
+}
+const items: ToDoItem[] = jsonTodos
+    .map((todo: jsonTodo) => (
+        {
+            ...todo,
+            id: v4(),
+            created_at: Date.now()
+        })
+    )
 
 type Prop = {
     children: React.ReactNode;

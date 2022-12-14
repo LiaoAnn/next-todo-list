@@ -1,8 +1,14 @@
-import Head from 'next/head'
+import {
+	BiEdit,
+	BiTrash
+} from "react-icons/bi"
 import Image from 'next/image'
-import Logo from "../public/logo.svg";
-import styles from '../styles/Home.module.css'
-import React, { useState, useEffect, useContext, useMemo } from 'react'
+import React, {
+	useState,
+	useEffect,
+	useContext,
+	useMemo
+} from 'react'
 import ToDosContext, {
 	ToDoItem,
 	ToDosProvider,
@@ -19,8 +25,9 @@ export default function Home() {
 				<Image
 					alt='logo'
 					src="/vercel.svg"
-					height={24}
+					height={64}
 					width={96}
+					style={{ margin: ".5em 0" }}
 				/>
 				<ToDosContainer />
 				<Navigation />
@@ -45,8 +52,8 @@ const ToDosContainer = () => {
 					.map((todo, index) => (
 						<Item
 							key={todo.id}
+							pxTop={index * 54}
 							item={todo}
-							pxTop={index * 76}
 							editing={todo.isNew || false}
 						>
 						</Item>
@@ -58,8 +65,8 @@ const ToDosContainer = () => {
 
 type Prop = {
 	item: ToDoItem;
-	pxTop: number;
 	editing: boolean;
+	pxTop: number;
 	children?: React.ReactNode;
 }
 
@@ -80,16 +87,19 @@ const Item = (prop: Prop) => {
 
 	const changeCompleted = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { checked } = e.target as HTMLInputElement;
-		todosDispatch({
-			type: TODO_TOGGLE,
-			payload: {
-				id: prop.item.id,
-				completed: checked
-			}
-		});
+
+		setTimeout(() => {
+			todosDispatch({
+				type: TODO_TOGGLE,
+				payload: {
+					id: prop.item.id,
+					completed: checked
+				}
+			});
+		}, 300)
 	}
 
-	const changeEditing = (e: React.MouseEvent<HTMLLabelElement>) => {
+	const changeEditing = () => {
 		setEditing(() => !editing);
 	}
 
@@ -111,39 +121,50 @@ const Item = (prop: Prop) => {
 		}
 	}
 
+	const className = [prop.item.completed ? 'completed' : '', editing ? 'editing' : '']
+		.filter(x => x)
+		.join(' ');
+
 	return (
 		<li
-			className={`${prop.item.completed ? "complete" : ""} ${editing ? "editing" : ""}`}
+			className={`${className}`}
 			style={{ top: `${prop.pxTop}px` }}
 		>
 			<div className="view">
-				<input
-					type="checkbox"
-					className="toggle"
-					defaultChecked={prop.item.completed}
-					onChange={changeCompleted}
-				/>
-				<label onDoubleClick={changeEditing}>{prop.item.title}</label>
-				<button
-					className="destroy"
-					onClick={() => {
-						todosDispatch({ type: TODO_REMOVE, payload: prop.item.id });
-					}}
-				>
-				</button>
+				{
+					editing ?
+						<input
+							className='edit'
+							ref={editInput}
+							defaultValue={prop.item.title}
+							onBlur={() => {
+								changeEditing();
+							}}
+							onKeyDown={keyDown}
+						/> :
+						<>
+							<label>
+								<input
+									type="checkbox"
+									className="toggle"
+									defaultChecked={prop.item.completed}
+									onChange={changeCompleted}
+								/>
+								<span>
+									{prop.item.title}
+								</span>
+							</label>
+							<div className="actions">
+								<BiEdit
+									onClick={() => changeEditing()}
+								/>
+								<BiTrash
+									onClick={() => todosDispatch({ type: TODO_REMOVE, payload: prop.item.id })}
+								/>
+							</div>
+						</>
+				}
 			</div>
-
-			{
-				editing ? (
-					<input
-						className='edit'
-						ref={editInput}
-						defaultValue={prop.item.title}
-						onBlur={() => { changeEditing }}
-						onKeyDown={keyDown}
-					/>
-				) : <></>
-			}
 		</li >
 	)
 }
