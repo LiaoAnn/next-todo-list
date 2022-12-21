@@ -24,10 +24,9 @@ export default function Home() {
 			<div className="main">
 				<Image
 					alt='logo'
-					src="/vercel.svg"
+					src="/next.svg"
 					height={64}
 					width={96}
-					style={{ margin: ".5em 0" }}
 				/>
 				<ToDosContainer />
 				<Navigation />
